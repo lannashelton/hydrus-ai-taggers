@@ -175,6 +175,6 @@ If you know who *person:p1* is, you can create a tag sibling to it and turn it i
 
 If an image is detected and added into DB but not tagged after recognize step, it means there's not enough similar images in DB yet. As you detect and add more images into your DB, recognition step will be more accurate (but will take longer as well).
 
-I suggest you to backup your face_embeddings.db regularly
+I suggest you to backup your face_embeddings.db regularly. If you lose the face_embedding DB you created, tags you created in hydrus won't be gone but you won't be able to progress with face detection anymore unless you start from scratch by deleting everything all tags in 'ai faces' and processing everything fresh.
 
 Face Detection and Recognition works best on real life photography and may not give optimal results on drawn artworks or AI generated images.
