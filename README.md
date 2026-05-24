@@ -16,6 +16,8 @@ It can use CPU, GPU or NPU (if you have drivers installed and your system can se
 #### WD14 AI Tagging
 WD14 AI tagger can tag images and videos with SmilingWolf's WD14 AI tagging models.
 
+It creates booru-like tags (1girl, solo, brown hair, sitting etc.).
+
 When AI tagger encounters a video, it generates 5 images from evenly distributed parts of the video and tags them. It is possible to manually increase or decrease the amount of frames generated from each video. More frames increases accuracy but makes each video take longer to process.
 
 #### Face Detection and Recognition
