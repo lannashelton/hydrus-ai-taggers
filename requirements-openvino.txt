@@ -1,0 +1,9 @@
+click
+pillow
+numpy
+opencv-python
+requests
+pandas
+onnxruntime-openvino
+hydrus-api
+insightface
