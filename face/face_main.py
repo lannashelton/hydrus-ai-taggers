@@ -1,13 +1,7 @@
 """
-Face tagger for Hydrus – two‑step Immich‑like pipeline.
-
+Face tagger for Hydrus – two‑step pipeline.
 Step 1: detect faces (once)
-    python face_main.py detect_batch hashes.txt --token YOUR_TOKEN
-
 Step 2: recognize persons (iterative, tunable)
-    python face_main.py recognize --token YOUR_TOKEN --min-faces 3 --max-distance 0.65
-
-Requirements: pip install hydrus_api click pillow opencv-python-headless onnxruntime numpy scikit-learn
 """
 
 import os, sqlite3, tempfile, hashlib, click
