@@ -38,7 +38,15 @@ cd hydrus-ai-taggers
 2. **Create a virtual environment to avoid possible package conflicts**
 ```bash
 python -m venv .venv
+```
+
+**Activate virtual environment (Linux/Mac)**
+```bash
 source .venv/bin/activate # Linux/Mac
+```
+
+**Activate virtual environment (Windows)**
+```bash
 .venv\Scripts\activate # Windows
 ```
 
