@@ -1,7 +1,0 @@
-[project]
-name = "wd-e621-hydrus-tagger"
-version = "0.0.1"
-license = "GPL-2.0-or-later"
-dynamic = ["dependencies"]
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
