@@ -7,3 +7,4 @@ pandas
 onnxruntime-gpu
 hydrus-api
 insightface
+scikit-learn
