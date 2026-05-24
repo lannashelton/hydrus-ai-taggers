@@ -72,6 +72,7 @@ Go to *wd14/model/wd-eva02-large-tagger-v3* folder. You will see *info.json* and
 
 6. **Prepare your Hydrus Network for AI tags**
 If you didn't use Hydrus api before, you will have to enable it and create an api key so this scripts can communicate with your Hydrus Network.
+
 For enabling api:
 - Open Hydrus Network
 - On top menu: Services -> manage services
@@ -109,12 +110,14 @@ source .venv/bin/activate       # Linux/Mac
 ```
 #### Quick Test to Check if it Works
 Before you start a tagging job, you can use a command like this to check if you can load the AI model properly and tag it.
+
 `python wd14_main.py evaluate "/home/user/Pictures/my-amazing-image.jpg" --device CPU`
 
 This command will also show you what tags it would generate.
 
 #### AI Tagging
 Start a full-auto AI tagging with a command like:
+
 `python wd14/wd14_main.py full-auto --token YOUR_ACCESS_KEY --tag-service "ai tags" --model "wd-eva02-large-tagger-v3" --device CPU --limit 100 --threshold 0.75`
 
 Replace *YOUR_ACCESS_KEY* with your access key.
