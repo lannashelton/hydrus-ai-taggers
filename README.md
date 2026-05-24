@@ -167,7 +167,7 @@ After you have detected some faces and added them into DB, use a command like th
 
 `python face/face_main.py recognize-staged --token YOUR_ACCESS_KEY --tag-service "ai faces" --max-distance 0.5 --distance-method cosine_similarity --stages 20,5,3,1`
 
-This uses a staged calculation for lowering risk of false positives and recognizing people better.
+This uses a staged calculation for lowering risk of false positives and recognizes people better.
 
 When this process is over, if your DB had enough detected faces of same people, you will see that it has created person tags like *person:p1*, *person:p2* etc in *ai faces*.
 
