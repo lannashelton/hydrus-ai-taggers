@@ -142,7 +142,7 @@ Replace *YOUR_ACCESS_KEY* with your access key.
 
 Replace *--device CPU* with which hardware you want to use. Options: *CPU, GPU, NPU*. If you do CPU it will be slow.
 
-You can lower threshold to 0.60 or 0.50 if it becomes too strict. But lower threshold will increase risk of false positives.
+High threshold will generate less tags but tags will be more accurate. You can lower threshold to 0.60 or 0.50 if it becomes too strict. But lower threshold will increase risk of false positives.
 
 When it starts running, it will start generating tags in *ai tags* and files that have *wd14 ai tagged* tag will be skipped.
 
