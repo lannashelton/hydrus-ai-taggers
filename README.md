@@ -129,7 +129,7 @@ You can use a command like this to check if you can load the AI model properly a
 
 `python face/face_main.py evaluate "/home/user/Pictures/my-amazing-image.jpg" --device CPU`
 
-This command will tell you how many faces in detected in that image with its confidence score and face coordinates.
+This command will tell you how many faces are detected in that image with its confidence score and face coordinates.
 
 If these work fine, you can successfully load and run AI models.
 
