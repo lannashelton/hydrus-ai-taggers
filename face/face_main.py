@@ -195,7 +195,7 @@ def push_tags(client, tag_service, extra_tags=None):
 #  Model loader (unchanged)
 # ----------------------------------------------------------------------
 def find_model_paths():
-    candidates = [Path("model"), Path("../model")]
+    candidates = [Path("./face/model"), Path("../model")]
     det_names = ["scrfd_2.5g_kps.onnx"]
     rec_names = ["w600k_r50.onnx", "arcface_resnet100.onnx"]
     det_path = rec_path = None
