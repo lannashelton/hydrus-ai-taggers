@@ -160,7 +160,7 @@ When this process is over, if your DB had enough detected faces of same people, 
 
 If you know who *person:p1* is, create a tag sibling to it and turn it into desired tag such as *person:bob marley*
 
-If an image is detected and added into DB but not tagged after recognize step, it means there's not enough similar images in DB yet. As you detect and add more images into your DB, recognition step will be more accurate (but will take longer as well). If you have a very big DB, expect recognizing to take long hours. I'm planning to optimize this step in future.
+If an image is detected and added into DB but not tagged after recognize step, it means there's not enough similar images in DB yet. As you detect and add more images into your DB, recognition step will be more accurate (but will take longer as well).
 
 I suggest you to backup your face_embeddings.db regularly
 
