@@ -19,7 +19,11 @@ WD14 AI tagger can tag images and videos with SmilingWolf's WD14 AI tagging mode
 When AI tagger encounters a video, it generates 5 images from evenly distributed parts of the video and tags them. It is possible to manually increase or decrease the amount of frames generated from each video. More frames increases accuracy but makes each video take longer to process.
 
 #### Face Detection and Recognition
-When you run face detection for first time, it downloads *buffalo_l* AI model package from Insightface automatically. 
+When you run face detection for first time, it downloads *buffalo_l* AI model package from Insightface automatically.
+
+Face detection and recognition is a 2 step process. Detecting faces creates a DB file with embeddings. Recognition command creates persons by looking at these embeddings and calculating their similarity with all other faces in DB. It is possible to automatically use a staged calculation that improves accuracy.
+
+If face recognition recognizes and creates a person, it tags those files with a tag like `person:p1`. If you know who that person is, you can manually create a tag sibling in hydrus and turn that generated person tags into desired tags. Example: `person:p1` -> `person:bob marley`
 
 ## Installation
 
