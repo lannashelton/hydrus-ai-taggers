@@ -63,14 +63,17 @@ For Nvidia GPU, make sure you have CUDA toolkit installed.
 For Intel NPU make sure you have Intel NPU drivers and Level Zero api installed.
 
 4. **Download WD14 AI Model**
+
 Download *wd-eva02-large-tagger-v3* WD14 AI model from SmilingWolf's Huggingface page [here](https://huggingface.co/SmilingWolf/wd-eva02-large-tagger-v3)
 
 You only need to download *model.onnx*
 
 5. **Put AI Model onnx in model folder**
+
 Go to *wd14/model/wd-eva02-large-tagger-v3* folder. You will see *info.json* and *selected_tags.csv* files in that folder. Put the *model.onnx* file you downloaded into that location.
 
 6. **Prepare your Hydrus Network for AI tags**
+
 If you didn't use Hydrus api before, you will have to enable it and create an api key so this scripts can communicate with your Hydrus Network.
 
 For enabling api:
