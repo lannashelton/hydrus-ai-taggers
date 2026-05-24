@@ -171,7 +171,7 @@ This uses a staged calculation for lowering risk of false positives and recogniz
 
 When this process is over, if your DB had enough detected faces of same people, you will see that it has created person tags like *person:p1*, *person:p2* etc in *ai faces*.
 
-If you know who *person:p1* is, you can create a tag sibling to it and turn it into desired tag such as *person:bob marley*. This is not mandatory as recognized people are already organized into unique tags anyways but turning these unique tags into names you know of gives you option to search them so I recommend doing it.
+If you know who *person:p1* is, you can create a tag sibling to it and turn it into desired tag such as *person:bob marley*. This is not mandatory as recognized people are already organized into unique tags anyways but turning these unique tags into names you know of gives you option to search them easier so I recommend doing it.
 
 If an image is detected and added into DB but not tagged after recognize step, it means there's not enough similar images in DB yet. As you detect and add more images into your DB, recognition step will be more accurate (but will take longer as well).
 
