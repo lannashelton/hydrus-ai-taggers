@@ -21,8 +21,6 @@ It creates booru-like tags (1girl, solo, brown hair, sitting etc.).
 When AI tagger encounters a video, it generates 5 images from evenly distributed parts of the video and tags them. It is possible to manually increase or decrease the amount of frames generated from each video. More frames increases accuracy but makes each video take longer to process.
 
 #### Face Detection and Recognition
-When you run face detection for first time, it downloads *buffalo_l* AI model package from Insightface automatically.
-
 Face detection and recognition is a 2 step process. Detecting faces creates a DB file with embeddings. Recognition command creates persons by looking at these embeddings and calculating their similarity with all other faces in DB. It is possible to automatically use a staged calculation that improves accuracy.
 
 If face recognition recognizes and creates a person, it tags those files with a tag like `person:p1`. If you know who that person is, you can manually create a tag sibling in hydrus and turn that generated person tags into desired tags.
@@ -74,7 +72,14 @@ You only need to download *model.onnx*
 
 Go to *wd14/model/wd-eva02-large-tagger-v3* folder. You will see *info.json* and *selected_tags.csv* files in that folder. Put the *model.onnx* file you downloaded into that location.
 
-6. **Prepare your Hydrus Network for AI tags**
+6. **Download face detection and face recognition onnx models.**
+Download [scrfd_2.5g_kps.onnx](https://github.com/laolaolulu/FaceTrain/blob/master/model/scrfd/scrfd_2.5g_kps.onnx) face detection AI model.
+Download [buffalo_l.zip](https://github.com/deepinsight/insightface/releases) AI model package.
+
+7. **Put face detection and face recognition models in model folder**
+Go to *face/model* folder. Put contents of *buffalo_l.zip* and *scrfd_2.5g_kps.onnx* in that folder.
+
+8. **Prepare your Hydrus Network for AI tags**
 
 If you didn't use Hydrus api before, you will have to enable it and create an api key so this scripts can communicate with your Hydrus Network.
 
@@ -103,7 +108,7 @@ For creating ai tag domains (optional but highly recommended to keep things clea
 - Create another local tag domain called *ai faces*
 - Click apply
 
-7. **You are done setting up and ready to run the scripts. Proceed to the How to Run section**
+9. **You are done setting up and ready to run the scripts. Proceed to the How to Run section**
 
 ## How to Run (Basics)
 
@@ -116,7 +121,7 @@ source .venv/bin/activate       # Linux/Mac
 #### Quick Test to Check if it Works (Optional)
 Before you start a tagging job, you can use a command like this to check if you can load the AI model properly and tag it.
 
-`python wd14_main.py evaluate "/home/user/Pictures/my-amazing-image.jpg" --device CPU`
+`python wd14/main.py evaluate "/home/user/Pictures/my-amazing-image.jpg" --device CPU`
 
 This command will also show you what tags it would generate.
 
