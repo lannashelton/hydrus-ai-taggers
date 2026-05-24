@@ -18,7 +18,7 @@ WD14 AI tagger can tag images and videos with SmilingWolf's WD14 AI tagging mode
 
 It creates booru-like tags (1girl, solo, brown hair, sitting etc.).
 
-When AI tagger encounters a video, it generates 5 images from evenly distributed parts of the video and tags them. It is possible to manually increase or decrease the amount of frames generated from each video. More frames increases accuracy but makes each video take longer to process.
+When AI tagger encounters a video, it generates 5 images from evenly distributed parts of the video and tags them. It is possible to manually increase or decrease the amount of frames generated from each video by changing a few lines in code. More frames increases accuracy but makes each video take longer to process.
 
 #### Face Detection and Recognition
 Face detection and recognition is a 2 step process. Detecting faces creates a DB file with embeddings. Recognition command creates persons by looking at these embeddings and calculating their similarity with all other faces in DB. It is possible to automatically use a staged calculation that improves accuracy.
