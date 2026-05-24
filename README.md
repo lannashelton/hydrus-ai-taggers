@@ -1,6 +1,6 @@
 # Hydrus AI Taggers Kit
 Hydrus AI Taggers Kit is a modified version of **Garbevoir/wd-e621-hydrus-tagger**.
-This is a work in progress and its current state is 'works on my machine'. I've tuned it to work on my linux mini pc with intel cpu and I've only tested it with openvino and intel npu. If you are using a different operating system or a different hardware, it may or may not work. I don't have chance to test it on other platforms as I don't own a mac or a nvidia gpu. I'm sharing these scripts here hoping maybe it may help a fellow hydrus network user.
+This is a work in progress and its current state is 'works on my machine'. I've tuned it to work on my linux mini pc with intel cpu and I've only tested it with openvino and intel npu. If you are using a different operating system or a different hardware, it may or may not work. I didn't have chance to test it on other platforms as I don't own a mac or a nvidia gpu. I'm sharing these scripts here hoping maybe it may help a fellow hydrus network user.
 
 ## Features
 Hydrus AI Taggers Kit currently has two parts:
@@ -108,7 +108,7 @@ cd hydrus-ai-taggers
 source .venv/bin/activate       # Linux/Mac
 .venv\Scripts\activate          # Windows
 ```
-#### Quick Test to Check if it Works
+#### Quick Test to Check if it Works (Optional)
 Before you start a tagging job, you can use a command like this to check if you can load the AI model properly and tag it.
 
 `python wd14_main.py evaluate "/home/user/Pictures/my-amazing-image.jpg" --device CPU`
