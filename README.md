@@ -125,7 +125,7 @@ Before you start a tagging job, you can use a command like this to check if you 
 
 This command will output what tags it would generate for that image.
 
-Yu can use a command like this to check if you can load the AI model properly and detect faces with it.
+You can use a command like this to check if you can load the AI model properly and detect faces with it.
 
 `python face/face_main.py evaluate "/home/user/Pictures/my-amazing-image.jpg" --device CPU`
 
