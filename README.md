@@ -163,7 +163,7 @@ Face detection will automatically create a DB containing embeddings data.
 
 When you want to stop the process, press *CTRL+C* to kill the process safely.
 
-After you have detected some faces and added them into DB, use a command like this to start recognizing people and creating persons:
+After you have detected some faces and added them into DB, use a command like this to start clustering faces, recognizing people and creating person tags:
 
 `python face/face_main.py recognize-staged --token YOUR_ACCESS_KEY --tag-service "ai faces" --max-distance 0.5 --distance-method cosine_similarity --stages 20,5,3,1`
 
