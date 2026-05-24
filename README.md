@@ -118,12 +118,20 @@ cd hydrus-ai-taggers
 source .venv/bin/activate       # Linux/Mac
 .venv\Scripts\activate          # Windows
 ```
-#### Quick Test to Check if it Works (Optional)
+#### Quick Test to Check if AI models Works (Optional)
 Before you start a tagging job, you can use a command like this to check if you can load the AI model properly and tag it.
 
 `python wd14/main.py evaluate "/home/user/Pictures/my-amazing-image.jpg" --device CPU`
 
-This command will also show you what tags it would generate.
+This command will output what tags it would generate for that image.
+
+Yu can use a command like this to check if you can load the AI model properly and detect faces with it.
+
+`python face/face_main.py evaluate "/home/user/Pictures/my-amazing-image.jpg" --device CPU`
+
+This command will tell you how many faces in detected in that image with its confidence score and face coordinates.
+
+If these work fine, you can successfully load and run AI models.
 
 #### AI Tagging
 Start a full-auto AI tagging with a command like:
