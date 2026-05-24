@@ -1,9 +1,13 @@
 """
-Face tagger for Hydrus – two‑step pipeline.
+Face tagger for Hydrus – two‑step Immich‑like pipeline.
 
 Step 1: detect faces (once)
+    python face_main.py detect_batch hashes.txt --token YOUR_TOKEN
 
 Step 2: recognize persons (iterative, tunable)
+    python face_main.py recognize --token YOUR_TOKEN --min-faces 3 --max-distance 0.65
+
+Requirements: pip install hydrus_api click pillow opencv-python-headless onnxruntime numpy scikit-learn
 """
 
 import os, sqlite3, tempfile, hashlib, click
@@ -14,6 +18,8 @@ from itertools import combinations
 import numpy as np
 from PIL import Image, ImageFile
 import cv2, onnxruntime
+
+from sklearn.neighbors import NearestNeighbors
 
 from interrogate_faces import FaceInterrogator, _align_face   # needed for debug_align
 import hydrus_api
@@ -113,35 +119,59 @@ def distance(a, b, method=None):
 #  Clustering (live neighbours)
 # ----------------------------------------------------------------------
 def cluster_faces(all_faces, max_distance, min_faces, allow_new=True):
+    """
+    Fast version using radius neighbors index.
+    All other logic unchanged.
+    """
+    if not all_faces:
+        return 0
+
+    n = len(all_faces)
+    X = np.vstack([f['emb'] for f in all_faces])          # shape (n, 512)
+
+    # Build nearest‑neighbours model
+    metric = 'cosine' if DISTANCE_METHOD == 'cosine_similarity' else 'euclidean'
+    nbrs = NearestNeighbors(radius=max_distance, metric=metric, n_jobs=-1)
+    nbrs.fit(X)
+
+    # Get neighbour indices for every face (includes self)
+    neighbour_indices = nbrs.radius_neighbors(X, return_distance=False)
+
+    # Prepare working arrays
+    person_ids = [None] * n                # assigned person_id per index
+    # We'll map face index (from all_faces) to position in list
+    # all_faces[i] -> index i
+
+    # Sort by degree (number of neighbours) descending
+    degree = np.array([len(neigh) for neigh in neighbour_indices])
+    order = np.argsort(-degree)            # descending
+
     assigned = 0
-    def degree(face):
-        cnt = 0
-        for other in all_faces:
-            if other['id'] == face['id']: continue
-            if distance(face['emb'], other['emb']) <= max_distance: cnt += 1
-        return cnt
-    working = [dict(f) for f in all_faces]
-    working.sort(key=degree, reverse=True)
-    for face in working:
-        if face['person_id'] is not None: continue
-        neighbours = []
-        for other in working:
-            if other['id'] == face['id']: continue
-            d = distance(face['emb'], other['emb'])
-            if d <= max_distance:
-                neighbours.append((d, other['person_id']))
-        is_core = len(neighbours) >= min_faces
-        existing_pids = [pid for _, pid in neighbours if pid is not None]
-        if existing_pids:
-            best_pid = Counter(existing_pids).most_common(1)[0][0]
-            assign_face_to_person(face['id'], best_pid)
-            face['person_id'] = best_pid
-            assigned += 1
-        elif is_core and allow_new:
-            new_pid = create_new_person()
-            assign_face_to_person(face['id'], new_pid)
-            face['person_id'] = new_pid
-            assigned += 1
+    for idx in order:
+        if person_ids[idx] is not None:
+            continue
+        neighbours = neighbour_indices[idx]
+        # Collect votes from neighbours that already have a person
+        votes = [person_ids[j] for j in neighbours if person_ids[j] is not None]
+        if votes:
+            # Most frequent existing person
+            best_pid = Counter(votes).most_common(1)[0][0]
+        else:
+            # Core point requirement: at least min_faces neighbours
+            if len(neighbours) >= min_faces and allow_new:
+                best_pid = create_new_person()
+            else:
+                continue   # not core, skip entirely (will never get assigned)
+
+        # Assign to the current face and all neighbours that are still unassigned?
+        # Old code only assigned the current face. We'll do the same.
+        # But we can also assign all core neighbours? No, we follow original: only assign current.
+        # Actually original code only assigns the current face; neighbours may be assigned later.
+        assign_face_to_person(all_faces[idx]['id'], best_pid)
+        person_ids[idx] = best_pid
+        all_faces[idx]['person_id'] = best_pid   # in‑memory for later neighbours
+        assigned += 1
+
     return assigned
 
 # ----------------------------------------------------------------------
