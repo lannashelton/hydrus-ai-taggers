@@ -31,7 +31,7 @@ Example: `person:p1` -> `person:bob marley`
 
 1. **Clone this repository and get into it**
 ```bash
-git clone
+git clone https://github.com/lannashelton/hydrus-ai-taggers
 cd hydrus-ai-taggers
 ```
 
