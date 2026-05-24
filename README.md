@@ -88,7 +88,7 @@ For enabling api:
 - On top menu: Services -> manage services
 - Double click *client api*
 - enable *run the client api?*
-- note the port number of *local port* (by default it is 45869)
+- note the port number of *local port* (by default it is 45869 and scripts use that port by default as well. If you decide to use a different port with your hydrus api, you will have to use --host flag to change the port on your inference command as well)
 - Apply
 
 For creating api key:
