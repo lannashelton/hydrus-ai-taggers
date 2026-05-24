@@ -115,55 +115,49 @@ def distance(a, b, method=None):
 def cluster_faces(all_faces, max_distance, min_faces, allow_new=True):
     """
     Fast version using radius neighbors index.
-    All other logic unchanged.
+    Excludes self from neighbourhood to match original behaviour.
     """
     if not all_faces:
         return 0
 
     n = len(all_faces)
-    X = np.vstack([f['emb'] for f in all_faces])          # shape (n, 512)
+    X = np.vstack([f['emb'] for f in all_faces])
 
-    # Build nearest‑neighbours model
     metric = 'cosine' if DISTANCE_METHOD == 'cosine_similarity' else 'euclidean'
     nbrs = NearestNeighbors(radius=max_distance, metric=metric, n_jobs=-1)
     nbrs.fit(X)
 
-    # Get neighbour indices for every face (includes self)
+    # neighbour_indices includes self for each point
     neighbour_indices = nbrs.radius_neighbors(X, return_distance=False)
 
-    # Prepare working arrays
-    person_ids = [None] * n                # assigned person_id per index
-    # We'll map face index (from all_faces) to position in list
-    # all_faces[i] -> index i
+    person_ids = [None] * n
 
-    # Sort by degree (number of neighbours) descending
-    degree = np.array([len(neigh) for neigh in neighbour_indices])
-    order = np.argsort(-degree)            # descending
+    # Compute degree (excluding self)
+    degree = np.array([len(neigh) - 1 for neigh in neighbour_indices])   # -1 removes self
+    order = np.argsort(-degree)
 
     assigned = 0
     for idx in order:
         if person_ids[idx] is not None:
             continue
-        neighbours = neighbour_indices[idx]
-        # Collect votes from neighbours that already have a person
-        votes = [person_ids[j] for j in neighbours if person_ids[j] is not None]
+
+        # Get neighbours, excluding the point itself
+        neigh_without_self = neighbour_indices[idx][neighbour_indices[idx] != idx]
+
+        # Collect votes from neighbours already assigned
+        votes = [person_ids[j] for j in neigh_without_self if person_ids[j] is not None]
         if votes:
-            # Most frequent existing person
             best_pid = Counter(votes).most_common(1)[0][0]
         else:
-            # Core point requirement: at least min_faces neighbours
-            if len(neighbours) >= min_faces and allow_new:
+            # Core point check: need at least min_faces **other** neighbours
+            if len(neigh_without_self) >= min_faces and allow_new:
                 best_pid = create_new_person()
             else:
-                continue   # not core, skip entirely (will never get assigned)
+                continue   # not core, skip entirely
 
-        # Assign to the current face and all neighbours that are still unassigned?
-        # Old code only assigned the current face. We'll do the same.
-        # But we can also assign all core neighbours? No, we follow original: only assign current.
-        # Actually original code only assigns the current face; neighbours may be assigned later.
         assign_face_to_person(all_faces[idx]['id'], best_pid)
         person_ids[idx] = best_pid
-        all_faces[idx]['person_id'] = best_pid   # in‑memory for later neighbours
+        all_faces[idx]['person_id'] = best_pid
         assigned += 1
 
     return assigned
