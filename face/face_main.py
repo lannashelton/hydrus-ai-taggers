@@ -14,6 +14,7 @@ from PIL import Image, ImageFile
 import cv2, onnxruntime
 
 from sklearn.neighbors import NearestNeighbors
+from collections import Counter
 
 from interrogate_faces import FaceInterrogator, _align_face   # needed for debug_align
 import hydrus_api
@@ -113,10 +114,6 @@ def distance(a, b, method=None):
 #  Clustering (live neighbours)
 # ----------------------------------------------------------------------
 def cluster_faces(all_faces, max_distance, min_faces, allow_new=True):
-    """
-    Fast version using radius neighbors index.
-    Excludes self from neighbourhood to match original behaviour.
-    """
     if not all_faces:
         return 0
 
@@ -127,37 +124,43 @@ def cluster_faces(all_faces, max_distance, min_faces, allow_new=True):
     nbrs = NearestNeighbors(radius=max_distance, metric=metric, n_jobs=-1)
     nbrs.fit(X)
 
-    # neighbour_indices includes self for each point
-    neighbour_indices = nbrs.radius_neighbors(X, return_distance=False)
+    # Retrieve all neighbours (each list includes the point itself)
+    raw_neighbours = nbrs.radius_neighbors(X, return_distance=False)
 
-    person_ids = [None] * n
+    # Remove the face itself to match the original behaviour
+    neighbour_indices = [np.setdiff1d(neigh, [i]) for i, neigh in enumerate(raw_neighbours)]
 
-    # Compute degree (excluding self)
-    degree = np.array([len(neigh) - 1 for neigh in neighbour_indices])   # -1 removes self
-    order = np.argsort(-degree)
+    # Degree = number of other faces within max_distance
+    degree = np.array([len(neigh) for neigh in neighbour_indices])
+    order = np.argsort(-degree)   # descending
 
+    # Working state
+    person_ids = [None] * n          # person_id assigned to each index
     assigned = 0
+
     for idx in order:
         if person_ids[idx] is not None:
             continue
 
-        # Get neighbours, excluding the point itself
-        neigh_without_self = neighbour_indices[idx][neighbour_indices[idx] != idx]
+        neighbours = neighbour_indices[idx]
 
-        # Collect votes from neighbours already assigned
-        votes = [person_ids[j] for j in neigh_without_self if person_ids[j] is not None]
-        if votes:
-            best_pid = Counter(votes).most_common(1)[0][0]
+        # Which neighbours already have a person?
+        existing = [person_ids[j] for j in neighbours if person_ids[j] is not None]
+        if existing:
+            # Use the most frequent person among assigned neighbours
+            best_pid = Counter(existing).most_common(1)[0][0]
         else:
-            # Core point check: need at least min_faces **other** neighbours
-            if len(neigh_without_self) >= min_faces and allow_new:
+            # Core point condition: at least min_faces other faces nearby
+            if len(neighbours) >= min_faces and allow_new:
                 best_pid = create_new_person()
             else:
-                continue   # not core, skip entirely
+                # Not a core point, leave for later
+                continue
 
+        # Assign this face
         assign_face_to_person(all_faces[idx]['id'], best_pid)
         person_ids[idx] = best_pid
-        all_faces[idx]['person_id'] = best_pid
+        all_faces[idx]['person_id'] = best_pid   # in‑memory update for later neighbours
         assigned += 1
 
     return assigned
@@ -186,7 +189,7 @@ def push_tags(client, tag_service, extra_tags=None):
             click.echo(f"Failed to tag {fhash}: {e}")
 
 # ----------------------------------------------------------------------
-#  Model loader (unchanged)
+#  Model loader
 # ----------------------------------------------------------------------
 def find_model_paths():
     candidates = [Path("./face/model"), Path("../model")]
